@@ -49,6 +49,7 @@
 				<inflow>Autotrophic_Respiration</inflow>
 				<inflow>Heterotrophic_Respiration</inflow>
 				<inflow>Emissions</inflow>
+				<inflow>Deforestation</inflow>
 				<outflow>GPP</outflow>
 				<non_negative/>
 				<units>Pg C</units>
@@ -58,6 +59,7 @@
 				<inflow>GPP</inflow>
 				<outflow>Autotrophic_Respiration</outflow>
 				<outflow>Litterfall</outflow>
+				<outflow>Deforestation</outflow>
 				<non_negative/>
 				<units>Pg C</units>
 			</stock>
@@ -95,7 +97,7 @@
 				<units>Pg C/yr</units>
 			</flow>
 			<flow name="Emissions">
-				<eqn>IF Scenario = 1 THEN emissions_base ELSE IF Scenario = 2 THEN emissions_base ELSE emissions_base</eqn>
+				<eqn>IF Scenario = 1 THEN emissions_base ELSE (IF Scenario = 2 THEN (IF TIME&lt; 30 THEN-(1/3)*TIME+emissions_base ELSE 0) ELSE (IF Scenario = 3 THEN emissions_base*(1+0.02)^TIME ELSE emissions_base))</eqn>
 				<non_negative/>
 				<units>Pg C/yr</units>
 			</flow>
@@ -105,7 +107,7 @@
 				<units>Pg C squared/yr</units>
 			</flow>
 			<aux name="GPP base">
-				<eqn>120</eqn>
+				<eqn>117</eqn>
 				<units>Pg C/yr</units>
 			</aux>
 			<aux name="Atm ref">
@@ -156,6 +158,15 @@
 					<ypts>800,848,892,932,968,1001,1031,1059,1085,1109,1132,1153,1173</ypts>
 				</gf>
 			</aux>
+			<aux name="Deforestation Rate">
+				<eqn>0.005</eqn>
+				<units>yr</units>
+			</aux>
+			<flow name="Deforestation">
+				<eqn>Deforestation_Rate*Vegetation</eqn>
+				<non_negative/>
+				<units>Pg C/yr</units>
+			</flow>
 		</variables>
 		<views>
 			<style color="black" background="white" font_style="normal" font_weight="normal" text_decoration="none" text_align="center" vertical_text_align="center" font_color="black" font_family="Arial" font_size="10pt" padding="2" border_color="black" border_width="thin" border_style="none">
@@ -205,7 +216,7 @@
 				<isee:iframe color="black" background="white" text_align="left" vertical_text_align="top" font_size="12pt" border_width="thin" border_style="solid"/>
 				<isee:financial_table color="black" background="white" text_align="right" font_size="12pt" hide_border="false" auto_fit="true" first_column_width="250" other_column_width="100" header_font_style="normal" header_font_weight="bold" header_text_decoration="none" header_text_align="center" header_vertical_text_align="center" header_font_color="black" header_font_family="Arial" header_font_size="14pt" header_text_padding="2" header_text_border_color="black" header_text_border_width="thin" header_text_border_style="none"/>
 			</style>
-			<view isee:show_pages="false" background="white" page_width="1024" page_height="784" isee:page_cols="2" isee:page_rows="2" isee:scroll_x="23" isee:popup_graphs_are_comparative="true" isee:enable_non_negative_highlights="false" type="stock_flow">
+			<view isee:show_pages="false" background="white" page_width="1024" page_height="784" isee:page_cols="2" isee:page_rows="2" isee:scroll_x="170" zoom="80" isee:popup_graphs_are_comparative="true" isee:enable_non_negative_highlights="false" type="stock_flow">
 				<style color="black" background="white" font_style="normal" font_weight="normal" text_decoration="none" text_align="center" vertical_text_align="center" font_color="black" font_family="Arial" font_size="10pt" padding="2" border_color="black" border_width="thin" border_style="none">
 					<stock color="blue" background="white" font_color="blue" font_size="9pt" label_side="top">
 						<shape type="rectangle" width="45" height="35"/>
@@ -244,42 +255,43 @@
 					</graph>
 					<table color="black" background="white" orientation="vertical" wrap_text="false" isee:auto_fit="true" isee:use_alternate_row_colors="false" isee:unlimited_table_length="false" blank_column_width="80" column_width="160" interval="1" report_balances="beginning" report_flows="instantaneous" header_font_style="normal" header_font_weight="normal" header_text_decoration="none" header_text_align="center" header_vertical_text_align="center" header_font_color="black" header_font_family="Arial" header_font_size="12pt" header_text_padding="2" header_text_border_color="black" header_text_border_width="thin" header_text_border_style="none"/>
 				</style>
-				<stock x="479.665" y="124.391" width="103.769" height="57.5352" name="Atmosphere"/>
-				<stock x="729.867" y="338.813" width="170.426" height="153.305" name="Vegetation"/>
+				<stock x="446.332" y="69.9466" width="103.769" height="57.5352" name="Atmosphere"/>
+				<stock x="909.867" y="328.813" width="170.426" height="153.305" name="Vegetation"/>
 				<stock x="282.25" y="364.568" width="146.719" height="130.758" name="SOM"/>
 				<stock x="229.434" y="378.043" name="Cumulative SE"/>
-				<flow x="616.891" y="397.68" name="GPP">
+				<flow x="690.224" y="387.68" name="GPP">
 					<pts>
-						<pt x="515.914" y="181.926"/>
-						<pt x="515.914" y="397.68"/>
-						<pt x="729.867" y="397.68"/>
+						<pt x="482.581" y="127.482"/>
+						<pt x="482.581" y="387.68"/>
+						<pt x="909.867" y="387.68"/>
 					</pts>
 				</flow>
-				<flow x="634.531" y="341.063" name="Autotrophic Respiration">
+				<flow x="707.864" y="331.063" name="Autotrophic Respiration">
 					<pts>
-						<pt x="729.867" y="341.063"/>
-						<pt x="539.195" y="341.063"/>
-						<pt x="539.195" y="181.926"/>
+						<pt x="909.867" y="331.063"/>
+						<pt x="505.862" y="331.063"/>
+						<pt x="505.862" y="127.482"/>
 					</pts>
 				</flow>
-				<flow x="585.418" y="483.23" name="Litterfall">
+				<flow x="718.025" y="483.23" name="Litterfall">
 					<pts>
-						<pt x="729.867" y="483.23"/>
+						<pt x="995.08" y="482.118"/>
+						<pt x="995.08" y="483.23"/>
 						<pt x="428.969" y="483.23"/>
 					</pts>
 				</flow>
-				<flow x="458.888" y="383.148" name="Heterotrophic Respiration">
+				<flow x="442.221" y="383.148" name="Heterotrophic Respiration">
 					<pts>
 						<pt x="428.969" y="383.148"/>
-						<pt x="488.807" y="383.148"/>
-						<pt x="488.807" y="181.926"/>
+						<pt x="455.474" y="383.148"/>
+						<pt x="455.474" y="127.482"/>
 					</pts>
 				</flow>
-				<flow x="638.238" y="205.406" name="Emissions">
+				<flow x="621.571" y="205.406" name="Emissions">
 					<pts>
 						<pt x="728.484" y="205.406"/>
-						<pt x="559.992" y="205.406"/>
-						<pt x="559.992" y="181.926"/>
+						<pt x="526.659" y="205.406"/>
+						<pt x="526.659" y="127.482"/>
 					</pts>
 				</flow>
 				<flow x="138.184" y="378.043" name="SE accumulation">
@@ -288,7 +300,7 @@
 						<pt x="206.934" y="378.043"/>
 					</pts>
 				</flow>
-				<aux x="544.672" y="425.703" name="GPP base"/>
+				<aux x="781.672" y="581.37" width="112" height="112" name="GPP base"/>
 				<aux x="616.102" y="433.465" name="Atm ref"/>
 				<aux x="684.403" y="433.465" name="Km CO2"/>
 				<aux x="684.403" y="287.477" name="resp fraction"/>
@@ -299,47 +311,47 @@
 				<aux x="389.434" y="168.043" name="Total Carbon"/>
 				<aux x="139.434" y="298.043" name="Squared Error"/>
 				<aux x="309.434" y="168.043" name="RMSE"/>
-				<connector uid="1" angle="267.286">
+				<connector uid="1" angle="281.649">
 					<from>Atmosphere</from>
 					<to>GPP</to>
 				</connector>
-				<connector uid="3" angle="152.074">
+				<connector uid="3" angle="82.7546">
 					<from>Km_CO2</from>
 					<to>GPP</to>
 				</connector>
-				<connector uid="4" angle="88.7373">
+				<connector uid="4" angle="31.7036">
 					<from>Atm_ref</from>
 					<to>GPP</to>
 				</connector>
-				<connector uid="6" angle="257.789">
+				<connector uid="6" angle="329.026">
 					<from>resp_fraction</from>
 					<to>Autotrophic_Respiration</to>
 				</connector>
-				<connector uid="7" angle="231.094">
+				<connector uid="7" angle="218.998">
 					<from>Vegetation</from>
 					<to>Litterfall</to>
 				</connector>
-				<connector uid="8" angle="41.2456">
+				<connector uid="8" angle="17.0224">
 					<from>tau_litter</from>
 					<to>Litterfall</to>
 				</connector>
-				<connector uid="9" angle="45.8574">
+				<connector uid="9" angle="49.8642">
 					<from>SOM</from>
 					<to>Heterotrophic_Respiration</to>
 				</connector>
-				<connector uid="10" angle="291.019">
+				<connector uid="10" angle="277.489">
 					<from>tau_som</from>
 					<to>Heterotrophic_Respiration</to>
 				</connector>
-				<connector uid="11" angle="216.18">
+				<connector uid="11" angle="212.544">
 					<from>Scenario</from>
 					<to>Emissions</to>
 				</connector>
-				<connector uid="12" angle="246.805">
+				<connector uid="12" angle="238.683">
 					<from>emissions_base</from>
 					<to>Emissions</to>
 				</connector>
-				<connector uid="13" angle="150.387">
+				<connector uid="13" angle="159.163">
 					<from>Atmosphere</from>
 					<to>Squared_Error</to>
 				</connector>
@@ -351,11 +363,11 @@
 					<from>Cumulative_SE</from>
 					<to>RMSE</to>
 				</connector>
-				<connector uid="17" angle="185.979">
+				<connector uid="17" angle="212.51">
 					<from>Atmosphere</from>
 					<to>Total_Carbon</to>
 				</connector>
-				<connector uid="18" angle="75.1757">
+				<connector uid="18" angle="83.9386">
 					<from>Vegetation</from>
 					<to>Total_Carbon</to>
 				</connector>
@@ -363,11 +375,7 @@
 					<from>SOM</from>
 					<to>Total_Carbon</to>
 				</connector>
-				<connector uid="2" angle="21.208">
-					<from>GPP_base</from>
-					<to>GPP</to>
-				</connector>
-				<connector uid="5" angle="87.0864">
+				<connector uid="5" angle="87.0854">
 					<from>GPP</from>
 					<to>Autotrophic_Respiration</to>
 				</connector>
@@ -375,6 +383,34 @@
 				<connector uid="20" angle="298.893">
 					<from>Observed_CO2</from>
 					<to>Squared_Error</to>
+				</connector>
+				<stacked_container uid="21" x="1052.17" y="28.477" width="178" height="250">
+					<table width="178" height="250">
+						<item type="time"/>
+						<item>
+							<entity name="GPP_base"/>
+						</item>
+					</table>
+				</stacked_container>
+				<aux x="60.1667" y="507.667" width="110.5" height="110.5" name="Deforestation Rate"/>
+				<flow x="704.042" y="405.466" name="Deforestation">
+					<pts>
+						<pt x="909.867" y="405.466"/>
+						<pt x="498.216" y="405.466"/>
+						<pt x="498.216" y="127.482"/>
+					</pts>
+				</flow>
+				<connector uid="24" angle="39.9754">
+					<from>Deforestation_Rate</from>
+					<to>Deforestation</to>
+				</connector>
+				<connector uid="25" angle="205">
+					<from>Vegetation</from>
+					<to>Deforestation</to>
+				</connector>
+				<connector uid="2" angle="120.563">
+					<from>GPP_base</from>
+					<to>GPP</to>
 				</connector>
 			</view>
 		</views>
